@@ -1,20 +1,37 @@
-
-
-
-
 const express = require('express');
 const path = require('path');
 const fs = require('fs');
 const os = require('os');
 const XLSX = require('xlsx');
 const multer = require('multer');
-const { chromium: playwrightChromium } = require('playwright');
+const { chromium, errors } = require('playwright');
 
 let chromeAwsLambda = null;
 try {
   chromeAwsLambda = require('chrome-aws-lambda');
 } catch {
   chromeAwsLambda = null;
+}
+
+async function criarBrowser({ mostrarNavegador = false } = {}) {
+  const args = ['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage'];
+
+  if (chromeAwsLambda) {
+    const executablePath = await chromeAwsLambda.executablePath;
+    const launchOptions = {
+      headless: true,
+      args: [...args, ...(chromeAwsLambda.args || [])],
+    };
+    if (executablePath) {
+      launchOptions.executablePath = executablePath;
+    }
+    return chromium.launch(launchOptions);
+  }
+
+  return chromium.launch({
+    headless: !mostrarNavegador,
+    args,
+  });
 }
 
 const app = express();
@@ -974,26 +991,8 @@ async function abrirNotaNoApr(page, numeroNs, usuarioApr, senhaApr) {
   await page.waitForSelector('#ContentPlaceHolder_textBoxResponsavelCadastro', { state: 'visible' });
 }
 
-async function criarBrowser() {
-  const args = ['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage'];
-
-  if (chromeAwsLambda && typeof chromeAwsLambda.executablePath === 'function') {
-    const executablePath = await chromeAwsLambda.executablePath;
-    return playwrightChromium.launch({
-      headless: true,
-      executablePath,
-      args,
-    });
-  }
-
-  return playwrightChromium.launch({
-    headless: true,
-    args,
-  });
-}
-
 async function consultarNsApr(numeroNs, usuarioApr, senhaApr, { mostrarNavegador = false, incluirAnexos = true } = {}) {
-  const browser = await criarBrowser();
+  const browser = await criarBrowser({ mostrarNavegador });
 
   try {
     const page = await browser.newPage();
@@ -1791,10 +1790,7 @@ async function baixarAnexosElegiveisDaPaginaAtual(page, dataInicioPlanejado, pas
 // Faz login, abre a NS informada, e baixa todos os anexos postados na data de início planejado
 // ou depois dela, salvando em uma subpasta de Downloads no padrão NS_XXXX_DOCUMENTACAO_DDMMAAAA_HHMMSS.
 async function baixarDocumentosPosterioresPlanejamento(numeroNs, dataInicioPlanejado, usuarioApr, senhaApr, { mostrarNavegador = false } = {}) {
-  const browser = await chromium.launch({
-    headless: !mostrarNavegador,
-    args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage'],
-  });
+  const browser = await criarBrowser({ mostrarNavegador });
 
   const nomePasta = montarNomePastaDownload(numeroNs);
   const pastaDestino = path.join(os.homedir(), 'Downloads', nomePasta);
