@@ -1,0 +1,19 @@
+{
+  "name": "testebotaprweb-node",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Clone em Node.js da aplicação APR (consulta NS individual e em lote)",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "postinstall": "node -e \"if (process.env.VERCEL !== '1') { require('child_process').execSync('npx playwright install chromium', { stdio: 'inherit' }); } else { console.log('Pulando instalação local de navegador para o Vercel'); }\""
+  },
+  "dependencies": {
+    "chrome-aws-lambda": "^10.1.0",
+    "express": "^4.21.2",
+    "multer": "^2.2.0",
+    "playwright": "^1.52.0",
+    "puppeteer-core": "^25.3.0",
+    "xlsx": "^0.18.5"
+  }
+}

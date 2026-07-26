@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Consulta APR por NS</title>
+  <link rel="stylesheet" href="static/botaprweb.css" />
+</head>
+<body>
+  <div class="page-container">
+    <div class="page-card">
+      <h1>Consulta APR por NS</h1>
+      <p>Bem-vindo ao sistema de consulta APR por NS. Esta interface está disponível para visualização estática no GitHub Pages.<br>
+      Para utilizar todas as funcionalidades (consulta, exportação, anexos), execute o servidor Node.js localmente.</p>
+      <hr>
+      <h2>Como usar</h2>
+      <ol>
+        <li>Clone o repositório: <code>git clone ...</code></li>
+        <li>Instale as dependências: <code>npm install</code></li>
+        <li>Execute o servidor: <code>npm start</code> ou <code>node server.js</code></li>
+        <li>Acesse <code>http://localhost:3000</code> no navegador.</li>
+      </ol>
+      <hr>
+      <h2>Exemplo de interface</h2>
+      <form class="form-grid">
+        <div class="campo">
+          <label for="usuario_apr">Matrícula APR</label>
+          <input id="usuario_apr" name="usuario_apr" type="text" maxlength="20" placeholder="Digite sua matrícula" required />
+        </div>
+        <div class="campo">
+          <label for="senha_apr">Senha APR</label>
+          <input id="senha_apr" name="senha_apr" type="password" maxlength="80" placeholder="Digite sua senha" required />
+        </div>
+        <div class="campo">
+          <label for="numero_ns">Número da NS</label>
+          <input id="numero_ns" name="numero_ns" type="text" maxlength="20" placeholder="Digite o número da NS" />
+        </div>
+        <div class="acoes-form">
+          <button type="submit" class="btn-primario">Pesquisar</button>
+        </div>
+      </form>
+      <hr>
+      <h2>Documentação</h2>
+      <ul>
+        <li><a href="https://github.com/Marckpir/protecao.github.io">Repositório no GitHub</a></li>
+        <li>Leia o README.md para instruções detalhadas.</li>
+      </ul>
+    </div>
+  </div>
+</body>
+</html>
